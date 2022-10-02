@@ -1,15 +1,17 @@
 package com.example.lab21
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.opengl.Visibility
+//import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+//import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login2.*
 
 class LoginActivity2 : AppCompatActivity()
 {
+    //@SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?)
     {
 
@@ -19,8 +21,8 @@ class LoginActivity2 : AppCompatActivity()
 
         regButton.setOnClickListener()
         {
-            var strEmail:String?
-            var strPass :String?
+            val strEmail:String?
+            val strPass :String?
 
                 if (EmailText.text.toString() != "")
                 {
