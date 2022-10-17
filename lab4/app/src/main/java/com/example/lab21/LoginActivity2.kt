@@ -12,6 +12,7 @@ import android.provider.ContactsContract.CommonDataKinds.Email
 import android.util.Log
 //import android.view.View
 import android.widget.Toast
+import androidx.core.content.edit
 import kotlinx.android.synthetic.main.activity_login2.*
 
 
@@ -30,46 +31,15 @@ class LoginActivity2 : AppCompatActivity()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login2)
-        val intent = Intent(this, MainActivity::class.java)
+    }
 
-        regButton.setOnClickListener()
-        {
-            val strEmail:String?
-            val strPass :String?
-
-                if (EmailText.text.toString() != "")
-                {
-                    if (PasswordText.text.toString() != "")
-                    {
-                        strEmail  = EmailText.text.toString()
-                        strPass = PasswordText.text.toString()
-
-
-                        intent.putExtra(EMAIL_KEY, strEmail)
-                        intent.putExtra(PASSWORD_KEY,strPass)
-
-                        startActivity(intent)
-                    }
-                    else
-                    {
-                        Toast.makeText(this,"Invalid password", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
-                else
-                {
-                    Toast.makeText(this,"Invalid E-mail", Toast.LENGTH_SHORT)
-                        .show()
-                }
-
-        }
-
-        backButton.setOnClickListener()
-        {
-
-            startActivity(intent)
-        }
-
+    private fun deleteSharedPrefs()
+    {
+        val sharedPreferences = getSharedPreferences(PREF_NAME,
+            Context.MODE_PRIVATE)
+        sharedPreferences.edit().remove(EMAIL_KEY).apply()
+        sharedPreferences.edit().remove(PASSWORD_KEY).apply()
+        Toast.makeText(this,"SharedPrefs delete",Toast.LENGTH_SHORT).show()
     }
 
     override fun onStart()
@@ -84,6 +54,46 @@ class LoginActivity2 : AppCompatActivity()
         super.onResume()
 
         getPrefData()
+
+        val intent = Intent(this, MainActivity::class.java)
+
+        regButton.setOnClickListener()
+        {
+            val strEmail:String?
+            val strPass :String?
+
+            if (EmailText.text.toString() != "")
+            {
+                if (PasswordText.text.toString() != "")
+                {
+                    strEmail  = EmailText.text.toString()
+                    strPass = PasswordText.text.toString()
+
+
+                    intent.putExtra(EMAIL_KEY, strEmail)
+                    intent.putExtra(PASSWORD_KEY,strPass)
+
+                    startActivity(intent)
+                }
+                else
+                {
+                    Toast.makeText(this,"Invalid password", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+            else
+            {
+                Toast.makeText(this,"Invalid E-mail", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            EmailText.text.clear()
+            PasswordText.text.clear()
+        }
+
+        backButton.setOnClickListener()
+        {
+            startActivity(intent)
+        }
     }
     private fun getPrefData()
     {
