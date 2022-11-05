@@ -7,4 +7,5 @@
     <string name="RegText">Регистрация</string>
     <string name="regButtonText">Зарегистрироваться</string>
     <string name="strBack">Назад</string>
+    <string name="clear_db">Clear_Db</string>
 </resources>
