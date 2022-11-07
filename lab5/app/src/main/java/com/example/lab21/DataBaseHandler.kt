@@ -33,6 +33,7 @@ class DataBaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
 
     fun restoreData(db: SQLiteDatabase, dataList: ArrayList<HashMap<String, String>>)
     {
+        dataList.clear()
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
         val projection = arrayOf(BaseColumns._ID, DBContract.UserEntry.COLUMN_NAME_EMAIL,
