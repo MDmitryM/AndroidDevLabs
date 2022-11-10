@@ -1,10 +1,11 @@
 package com.example.lab21
 
+import android.content.ContentValues
 import android.content.Context
+import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
-import android.widget.Toast
 
 class DataBaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION)
 {
@@ -31,9 +32,35 @@ class DataBaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         const val DATABASE_NAME = "FeedReader.db"
     }
 
-    fun restoreData(db: SQLiteDatabase, dataList: ArrayList<HashMap<String, String>>)
+    fun insertUser(db:SQLiteDatabase,user:User)
     {
-        dataList.clear()
+        // Create a new map of values, where column names are the keys
+        val values = ContentValues().apply {
+            put(DBContract.UserEntry.COLUMN_NAME_EMAIL, user._userEmail)
+            put(DBContract.UserEntry.COLUMN_NAME_PASSWORD, user._userPassword)
+        }
+
+        // Insert the new row, returning the primary key value of the new row
+        val newRowId = db?.insert(DBContract.UserEntry.TABLE_NAME, null, values)
+        val dbRowsCount = DatabaseUtils.queryNumEntries(db,DBContract.UserEntry.TABLE_NAME)
+    }
+    fun delUser(db: SQLiteDatabase, index: Int): Int {
+        val DbId = index + 1
+        // Define 'where' part of query.
+        val selection = "${BaseColumns._ID} = ?"
+        // Specify arguments in placeholder order.
+        val selectionArgs: String = DbId.toString()
+        // Issue SQL statement.
+
+        return db.delete(
+            DBContract.UserEntry.TABLE_NAME, selection,
+            arrayOf(selectionArgs)
+        )
+    }
+
+    fun restoreData(db: SQLiteDatabase, userList: ArrayList<User>)
+    {
+        //dataList.clear()
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
         val projection = arrayOf(BaseColumns._ID, DBContract.UserEntry.COLUMN_NAME_EMAIL,
@@ -61,14 +88,12 @@ class DataBaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
 
         with(cursor) {
             while (moveToNext()) {
-                val map: HashMap<String, String> =HashMap()
                 val itemEmail = getString(getColumnIndexOrThrow(
                     DBContract.UserEntry.COLUMN_NAME_EMAIL))
                 val itemPassword = getString(getColumnIndexOrThrow(
                     DBContract.UserEntry.COLUMN_NAME_PASSWORD))
-                map.put(EMAIL_KEY, itemEmail)
-                map.put(PASSWORD_KEY, itemPassword)
-                dataList.add(map)
+                val user:User = User(itemEmail,itemPassword)
+                userList.add(user)
             }
         }
         cursor.close()
