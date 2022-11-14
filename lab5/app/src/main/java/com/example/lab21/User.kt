@@ -1,8 +1,10 @@
 package com.example.lab21
 
+import android.os.Parcelable
+import java.io.Serializable
 import java.util.Objects
 
-class User(email:String, password:String)
+class User(email:String, password:String): Serializable
 {
     val _userEmail:String = email
     val _userPassword:String = password

@@ -7,7 +7,6 @@ object DBContract
     // Table contents are grouped together in an anonymous object.
     object UserEntry : BaseColumns {
         const val TABLE_NAME = "users"
-        //const val COLUMN_NAME_KEY_ID = "id"
         const val COLUMN_NAME_EMAIL = "email"
         const val COLUMN_NAME_PASSWORD = "password"
     }

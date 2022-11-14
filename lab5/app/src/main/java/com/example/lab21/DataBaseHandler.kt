@@ -44,12 +44,12 @@ class DataBaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         val newRowId = db?.insert(DBContract.UserEntry.TABLE_NAME, null, values)
         val dbRowsCount = DatabaseUtils.queryNumEntries(db,DBContract.UserEntry.TABLE_NAME)
     }
-    fun delUser(db: SQLiteDatabase, index: Int): Int {
-        val DbId = index + 1
+    fun delUser(db: SQLiteDatabase, email: String): Int {
+        val DbEmail = email
         // Define 'where' part of query.
-        val selection = "${BaseColumns._ID} = ?"
+        val selection = "${DBContract.UserEntry.COLUMN_NAME_EMAIL} = ?"
         // Specify arguments in placeholder order.
-        val selectionArgs: String = DbId.toString()
+        val selectionArgs: String = DbEmail
         // Issue SQL statement.
 
         return db.delete(
@@ -58,7 +58,7 @@ class DataBaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         )
     }
 
-    fun restoreData(db: SQLiteDatabase, userList: ArrayList<User>)
+    fun restoreData(db: SQLiteDatabase, userList: ArrayList<User>?)
     {
         //dataList.clear()
         // Define a projection that specifies which columns from the database
@@ -93,7 +93,7 @@ class DataBaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
                 val itemPassword = getString(getColumnIndexOrThrow(
                     DBContract.UserEntry.COLUMN_NAME_PASSWORD))
                 val user:User = User(itemEmail,itemPassword)
-                userList.add(user)
+                userList?.add(user)
             }
         }
         cursor.close()
