@@ -32,7 +32,7 @@ class DataBaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         const val DATABASE_NAME = "FeedReader.db"
     }
 
-    fun insertUser(db:SQLiteDatabase,user:User)
+    suspend fun insertUser(db:SQLiteDatabase,user:User)
     {
         // Create a new map of values, where column names are the keys
         val values = ContentValues().apply {
@@ -44,7 +44,7 @@ class DataBaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         val newRowId = db?.insert(DBContract.UserEntry.TABLE_NAME, null, values)
         val dbRowsCount = DatabaseUtils.queryNumEntries(db,DBContract.UserEntry.TABLE_NAME)
     }
-    fun delUser(db: SQLiteDatabase, email: String): Int {
+    suspend fun delUser(db: SQLiteDatabase, email: String): Int {
         val DbEmail = email
         // Define 'where' part of query.
         val selection = "${DBContract.UserEntry.COLUMN_NAME_EMAIL} = ?"
@@ -58,8 +58,9 @@ class DataBaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         )
     }
 
-    fun restoreData(db: SQLiteDatabase, userList: ArrayList<User>?)
+    suspend fun restoreData (db: SQLiteDatabase, userList: ArrayList<User>?)
     {
+
         //dataList.clear()
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
@@ -86,16 +87,18 @@ class DataBaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         val EMAIL_KEY = "e"
         val PASSWORD_KEY = "p"
 
-        with(cursor) {
-            while (moveToNext()) {
-                val itemEmail = getString(getColumnIndexOrThrow(
-                    DBContract.UserEntry.COLUMN_NAME_EMAIL))
-                val itemPassword = getString(getColumnIndexOrThrow(
-                    DBContract.UserEntry.COLUMN_NAME_PASSWORD))
-                val user:User = User(itemEmail,itemPassword)
-                userList?.add(user)
+            with(cursor)
+            {
+                while (moveToNext())
+                {
+                    val itemEmail = getString(getColumnIndexOrThrow(
+                        DBContract.UserEntry.COLUMN_NAME_EMAIL))
+                    val itemPassword = getString(getColumnIndexOrThrow(
+                        DBContract.UserEntry.COLUMN_NAME_PASSWORD))
+                    val user:User = User(itemEmail,itemPassword)
+                    userList?.add(user)
+                }
             }
-        }
         cursor.close()
     }
 }
