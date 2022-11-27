@@ -1,37 +1,18 @@
 package com.example.lab21
 
-import android.content.Context
+import android.annotation.SuppressLint
+import android.content.ContentValues
+import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
+import android.provider.BaseColumns
+import android.util.Log
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 
-
-
-class DataBaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION)
+class UserHandler
 {
-
-    override fun onCreate(db: SQLiteDatabase)
-    {
-        db.execSQL(DBContract.DBCreateStr())
-    }
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int)
-    {
-        // This database is only a cache for online data, so its upgrade policy is
-        // to simply to discard the data and start over
-        db.execSQL(DBContract.DBDeleteStr())
-        onCreate(db)
-    }
-    override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int)
-    {
-        onUpgrade(db, oldVersion, newVersion)
-    }
-    companion object
-    {
-        // If you change the database schema, you must increment the database version.
-        const val DATABASE_VERSION = 1
-        const val DATABASE_NAME = "FeedReader.db"
-    }
-
-    /*suspend fun insertUser(db:SQLiteDatabase,user:User) = coroutineScope {
+suspend fun insertUser(db: SQLiteDatabase, user:User) = coroutineScope {
 
         // Create a new map of values, where column names are the keys
         val values = ContentValues().apply {
@@ -71,7 +52,8 @@ class DataBaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         //dataList.clear()
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
-        val projection = arrayOf(BaseColumns._ID, DBContract.UserEntry.COLUMN_NAME_EMAIL,
+        val projection = arrayOf(
+            BaseColumns._ID, DBContract.UserEntry.COLUMN_NAME_EMAIL,
             DBContract.UserEntry.COLUMN_NAME_PASSWORD)
 
         // Filter results WHERE "title" = 'My Title'
@@ -123,5 +105,5 @@ class DataBaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         }
         Log.i("AppLogger", "SMTHNG")
         job.await()
-    }*/
+    }
 }
