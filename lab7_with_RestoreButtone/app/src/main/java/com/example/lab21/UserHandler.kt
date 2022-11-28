@@ -85,25 +85,26 @@ suspend fun insertUser(db: SQLiteDatabase, user:User) = coroutineScope {
 
             with(cursor)
             {
-                    while (moveToNext())
-                    {
-                        val itemEmail = getString(
-                            getColumnIndexOrThrow(
-                                DBContract.UserEntry.COLUMN_NAME_EMAIL
-                            )
+                while (moveToNext())
+                {
+
+                    val itemEmail = getString(
+                        getColumnIndexOrThrow(
+                            DBContract.UserEntry.COLUMN_NAME_EMAIL
                         )
-                        val itemPassword = getString(
-                            getColumnIndexOrThrow(
-                                DBContract.UserEntry.COLUMN_NAME_PASSWORD
-                            )
+                    )
+                    val itemPassword = getString(
+                        getColumnIndexOrThrow(
+                            DBContract.UserEntry.COLUMN_NAME_PASSWORD
                         )
-                        val user: User = User(itemEmail, itemPassword)
-                        userList?.add(user)
-                    }
+                    )
+                    val user: User = User(itemEmail, itemPassword)
+                    userList?.add(user)
+
+                }
             }
             cursor.close()
         }
-        Log.i("AppLogger", "SMTHNG")
         job.await()
     }
 }
